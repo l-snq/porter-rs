@@ -29,8 +29,7 @@ async fn main() {
 }
 
 fn app() -> Router {
-    Router::new().route("/porter/{name}", get(porter))
-
+    Router::new().route("/porter/{name}", get(porter)).route("/file/{name}", get(file))
 }
 
 async fn porter(extract::Path(name): extract::Path<String>) -> impl IntoResponse {
@@ -39,9 +38,20 @@ async fn porter(extract::Path(name): extract::Path<String>) -> impl IntoResponse
     HtmlTemplate(template)
 }
 
+async fn file(extract::Path(name): extract::Path<String>) -> impl IntoResponse {
+
+    let template = FileTemplate { name };
+    HtmlTemplate(template)
+}
 #[derive(Template)]
 #[template(path = "porter.html")]
 struct PorterTemplate {
+    name: String,
+}
+
+#[derive(Template)]
+#[template(path = "file.html")]
+struct FileTemplate {
     name: String,
 }
 
